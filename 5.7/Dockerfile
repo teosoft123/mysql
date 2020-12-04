@@ -76,5 +76,8 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-EXPOSE 3306 33060
+# We want to run multiple instances in Jenkins and the following EXPOSE
+# tries to use the same port, creating a conflict. 
+# Specify port to expose and forward to 3306 on command line or in docker-compose file instead 
+# EXPOSE 3306 33060
 CMD ["mysqld"]

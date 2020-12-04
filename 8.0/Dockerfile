@@ -46,7 +46,7 @@ RUN set -ex; \
 	apt-key list > /dev/null
 
 ENV MYSQL_MAJOR 8.0
-ENV MYSQL_VERSION 8.0.19-1debian9
+ENV MYSQL_VERSION 8.0.22-1debian9
 
 RUN echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-${MYSQL_MAJOR}" > /etc/apt/sources.list.d/mysql.list
 
@@ -71,5 +71,8 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-EXPOSE 3306 33060
+# We want to run multiple instances in Jenkins and the following EXPOSE
+# tries to use the same port, creating a conflict.
+# Specify port to expose and forward to 3306 on command line or in docker-compose file instead
+# EXPOSE 3306 33060
 CMD ["mysqld"]
